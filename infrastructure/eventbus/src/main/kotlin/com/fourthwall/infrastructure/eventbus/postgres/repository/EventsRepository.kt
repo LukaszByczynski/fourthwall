@@ -22,7 +22,7 @@ class EventsRepository(private val database: Database) {
     }
 
     fun fetchFromOffset(offset: Int, limit: Int = 100): List<EventBusEvent> {
-        return transaction {
+        return transaction(database) {
             Events
                 .selectAll()
                 .where(Events.id greater offset)
@@ -32,7 +32,7 @@ class EventsRepository(private val database: Database) {
     }
 
     fun publish(topic: String, payload: String) {
-        transaction {
+        transaction(database) {
             Events.insert {
                 it[Events.topic] = topic
                 it[Events.payload] = payload

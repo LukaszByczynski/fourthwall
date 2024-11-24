@@ -39,7 +39,7 @@ class PostgresEventBus(
         var offset = clientOffsetRepository.fetchOffset(clientId)
         job = scope.launch {
             while (isActive) {
-                transaction {
+                transaction(database) {
                     val events = eventsRepository.fetchFromOffset(offset)
                     if (events.size > 0) {
                         offset = events.maxOf { it.id }
@@ -89,7 +89,7 @@ class PostgresEventBus(
         payload: T,
         serializationStrategy: SerializationStrategy<T>
     ) {
-        transaction {
+        transaction(database) {
             eventsRepository.publish(
                 topic, json.encodeToString(serializationStrategy, payload)
             )

@@ -18,7 +18,7 @@ class ClientOffsetRepository(private val database: Database) {
     }
 
     fun updateOffset(clientId: String, offset: Int) {
-        transaction {
+        transaction(database) {
             // Check if the user exists
             val has = ClientOffset
                 .selectAll()
@@ -39,7 +39,7 @@ class ClientOffsetRepository(private val database: Database) {
     }
 
     fun fetchOffset(clientId: String): Int {
-        return transaction {
+        return transaction(database) {
             ClientOffset
                 .select(ClientOffset.offset)
                 .where { ClientOffset.clientId eq clientId }
