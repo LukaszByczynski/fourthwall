@@ -1,0 +1,13 @@
+ktor:
+  application:
+    modules:
+      - com.fourthwall.cinema.manager.CinemaManagerKt.module
+  deployment:
+    port: 8080
+
+
+databases:
+  cinemamanagerdb:
+    url: "jdbc:postgresql://localhost:5432/cinemamanagerdb"
+    user: cinemamanager
+    password: $CINEMAMANAGER_USER_PASSWORD

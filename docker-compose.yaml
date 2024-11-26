@@ -1,0 +1,24 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_DB=fourthwalldb
+      - POSTGRES_USER=fourthwall
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - CINEMAMANAGER_USER_PASSWORD=${CINEMAMANAGER_USER_PASSWORD}
+      - MOVIESLISTING_USER_PASSWORD=${MOVIESLISTING_USER_PASSWORD}
+      - EVENTBUS_USER_PASSWORD=${EVENTBUS_USER_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - .postgres/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
+      - .postgres/pass.sh:/docker-entrypoint-initdb.d/pass.sh
+    networks:
+      - postgres_network
+
+volumes:
+  postgres_data:
+
+networks:
+  postgres_network:

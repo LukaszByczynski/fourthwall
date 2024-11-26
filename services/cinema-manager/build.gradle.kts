@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
+    application
 }
 
 dependencies {
@@ -15,6 +16,7 @@ dependencies {
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+    implementation("io.ktor:ktor-server-config-yaml:$ktorVersion")
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
@@ -28,4 +30,8 @@ dependencies {
     testImplementation(kotlin("test"))
     testImplementation("org.testcontainers:postgresql:1.17.3")
     testImplementation("com.h2database:h2:2.1.214")
+}
+
+application {
+    mainClass.set("com.fourthwall.cinema.manager.CinemaManagerKt")
 }
