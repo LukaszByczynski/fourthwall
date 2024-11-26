@@ -1,5 +1,8 @@
 package com.fourthwall.cinema.manager.infrastructure.repository
 
+import com.fourthwall.cinema.manager.domain.cinema.ImdbId
+import com.fourthwall.cinema.manager.domain.cinema.Movie
+import com.fourthwall.cinema.manager.domain.cinema.MovieId
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -7,7 +10,6 @@ import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.utility.DockerImageName
 import kotlin.test.*
-import com.fourthwall.cinema.manager.domain.cinema.*
 
 class PostgresCinemaDomainRepositoryTest {
 

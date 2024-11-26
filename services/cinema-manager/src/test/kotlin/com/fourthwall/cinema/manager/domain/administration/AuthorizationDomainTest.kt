@@ -21,7 +21,7 @@ class AuthorizationDomainTest {
         val loginResult = authorization.login("admin", hashPassword("admin"))
 
         assertTrue(loginResult.isRight())
-        assertEquals("123", loginResult.orNull()?.token)
+        assertEquals("123", loginResult.getOrNull()?.token)
     }
 
     @Test
@@ -29,7 +29,7 @@ class AuthorizationDomainTest {
         val loginResult = authorization.login("admin", "wrongPasswordHash")
 
         assertTrue(loginResult.isLeft())
-        assertEquals("Wrong login or password", loginResult.swap().orNull())
+        assertEquals("Wrong login or password", loginResult.swap().getOrNull())
     }
 
     @Test
@@ -37,13 +37,13 @@ class AuthorizationDomainTest {
         val loginResult = authorization.login("user", hashPassword("admin"))
 
         assertTrue(loginResult.isLeft())
-        assertEquals("Wrong login or password", loginResult.swap().orNull())
+        assertEquals("Wrong login or password", loginResult.swap().getOrNull())
     }
 
     @Test
     fun `test logout`() {
         val loginResult = authorization.login("admin", hashPassword("admin"))
-        val token = loginResult.orNull()
+        val token = loginResult.getOrNull()
 
         assertNotNull(token)
 
@@ -55,7 +55,7 @@ class AuthorizationDomainTest {
     @Test
     fun `test hasAuthorization after login and logout`() {
         val loginResult = authorization.login("admin", hashPassword("admin"))
-        val token = loginResult.orNull()
+        val token = loginResult.getOrNull()
 
         assertNotNull(token)
         assertTrue(authorization.hasAuthorization(token!!))

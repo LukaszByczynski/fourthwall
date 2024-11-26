@@ -9,7 +9,7 @@ dependencies {
     val ktorVersion: String by project
     val ktorSwaggerVersion: String by project
     val logbackVersion: String by project
-
+    val postgresqlVersion: String by project
 
     implementation(kotlin("stdlib"))
     implementation("io.ktor:ktor-server-core:$ktorVersion")
@@ -20,7 +20,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
-    implementation("org.postgresql:postgresql:42.5.0")
+    implementation("org.postgresql:postgresql:$postgresqlVersion")
     implementation("io.github.smiley4:ktor-swagger-ui:$ktorSwaggerVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
@@ -28,8 +28,13 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
 
     testImplementation(kotlin("test"))
-    testImplementation("org.testcontainers:postgresql:1.17.3")
-    testImplementation("com.h2database:h2:2.1.214")
+    testImplementation("org.testcontainers:postgresql:1.20.4")
+    testImplementation("com.h2database:h2:2.2.220")
+    testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
+    testImplementation("io.ktor:ktor-client-core:$ktorVersion")
+    testImplementation("io.ktor:ktor-client-cio:$ktorVersion")
+    testImplementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+    testImplementation("io.ktor:ktor-client-serialization:$ktorVersion")
 }
 
 application {

@@ -1,6 +1,9 @@
 package com.fourthwall.cinema.manager.domain.cinema
 
-import arrow.core.*
+import arrow.core.Either
+import arrow.core.flattenOrAccumulate
+import arrow.core.left
+import arrow.core.right
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 
