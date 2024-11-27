@@ -6,5 +6,6 @@ in pkgs.mkShell rec {
   buildInputs = [
     pkgs.zulu17
     pkgs.gradle
+    pkgs.openapi-generator-cli
 	];
 }

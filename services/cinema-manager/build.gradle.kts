@@ -27,6 +27,8 @@ dependencies {
     implementation("io.arrow-kt:arrow-core:1.2.4")
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
 
+    implementation(project(":infrastructure:moviedb-client"))
+
     testImplementation(kotlin("test"))
     testImplementation("org.testcontainers:postgresql:1.20.4")
     testImplementation("com.h2database:h2:2.2.220")

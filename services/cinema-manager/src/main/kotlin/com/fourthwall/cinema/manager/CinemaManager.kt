@@ -34,6 +34,7 @@ fun configureDatabases(config: ApplicationConfig) {
 }
 
 fun Application.module() {
+
     install(SwaggerUI)
     install(ContentNegotiation) {
         json() // Enable JSON serialization

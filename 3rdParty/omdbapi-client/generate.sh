@@ -1,0 +1,1 @@
+openapi-generator-cli generate -i swagger.yaml -g kotlin -o . --library jvm-ktor -p serializableModel=true -p serializationLibrary=kotlinx_serialization -p packageName=com.omdbapi.client -p useSettingsGradle=false -p omitGradleWrapper=true -p dateLibrary=kotlinx-datetime
