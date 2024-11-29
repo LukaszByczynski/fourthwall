@@ -4,6 +4,9 @@ import com.fourthwall.cinema.manager.api.v1.AddMovieRequest
 import com.fourthwall.cinema.manager.api.v1.AddShowTimeRequest
 import com.fourthwall.cinema.manager.api.v1.LoginRequest
 import com.fourthwall.cinema.manager.domain.cinema.*
+import com.fourthwall.infrastructure.eventbus.EventBus
+import com.fourthwall.infrastructure.eventbus.inmem.InMemEventBus
+import com.fourthwall.infrastructure.eventbus.postgres.PostgresEventBus
 import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
@@ -21,32 +24,47 @@ import kotlin.test.*
 class CinemaRoutesE2ETest {
 
     private val testToken = "test-token"
-    private val postgresContainer: PostgreSQLContainer<Nothing>
+    private val mainDbPostgresContainer: PostgreSQLContainer<Nothing>
+    private val eventBusDbPostgresContainer: PostgreSQLContainer<Nothing>
+    private lateinit var database: Database
+    private lateinit var eventBus: EventBus
 
     init {
-        postgresContainer = PostgreSQLContainer<Nothing>(
+        mainDbPostgresContainer = PostgreSQLContainer<Nothing>(
+            DockerImageName.parse("postgres:16-alpine")
+        ).waitingFor(
+            Wait.defaultWaitStrategy()
+        )
+        eventBusDbPostgresContainer = PostgreSQLContainer<Nothing>(
             DockerImageName.parse("postgres:16-alpine")
         ).waitingFor(
             Wait.defaultWaitStrategy()
         )
 
-        postgresContainer.start()
+        mainDbPostgresContainer.start()
+        eventBusDbPostgresContainer.start()
     }
 
     @BeforeTest
     fun setUp() {
-        Database.connect(
-            postgresContainer.jdbcUrl,
+        database = Database.connect(
+            mainDbPostgresContainer.jdbcUrl,
             driver = "org.postgresql.Driver",
-            user = postgresContainer.username,
-            password = postgresContainer.password
+            user = mainDbPostgresContainer.username,
+            password = mainDbPostgresContainer.password
+        )
+        eventBus = PostgresEventBus(
+            clientId = "cinemamanager",
+            jdbcUrl = eventBusDbPostgresContainer.jdbcUrl,
+            username = eventBusDbPostgresContainer.username,
+            password = eventBusDbPostgresContainer.password
         )
     }
 
     @Test
     fun `Scenario 1 Add a Movie and Fetch Its Details`() = testApplication {
         application {
-            module()
+            module(database, eventBus)
         }
 
         runBlocking {
@@ -92,7 +110,7 @@ class CinemaRoutesE2ETest {
     @Test
     fun `Scenario 2 Add a ShowTime for a Movie`() = testApplication {
         application {
-            module()
+            module(database, eventBus)
         }
 
         runBlocking {
@@ -153,7 +171,7 @@ class CinemaRoutesE2ETest {
     @Test
     fun `Scenario 3 Fetch All Movies with Pagination`() = testApplication {
         application {
-            module()
+            module(database, eventBus)
         }
 
         runBlocking {
@@ -206,7 +224,7 @@ class CinemaRoutesE2ETest {
     @Test
     fun `Scenario 4 Delete a Movie`() = testApplication {
         application {
-            module()
+            module(database, eventBus)
         }
 
         runBlocking {
@@ -255,17 +273,4 @@ class CinemaRoutesE2ETest {
         }
     }
 
-
-// @Test
-// fun `Scenario 5 Handle Invalid Movie ID`() = testApplication {
-//  application {
-//   module() // Replace with your actual module function
-//  }
-//
-//  val response = client.get<HttpResponse>("/cinema/movies/invalid_id") {
-//   addHeader("X-TOKEN", testToken)
-//  }
-//
-//  assertEquals(HttpStatusCode.BadRequest, response.status)
-// }
 }

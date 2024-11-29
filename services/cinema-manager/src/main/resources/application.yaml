@@ -10,3 +10,7 @@ databases:
     url: "jdbc:postgresql://localhost:5432/cinemamanagerdb"
     user: cinemamanager
     password: $CINEMAMANAGER_USER_PASSWORD
+  eventbusdb:
+    url: "jdbc:postgresql://localhost:5432/eventbusdb"
+    user: eventbus
+    password: $EVENTBUS_USER_PASSWORD

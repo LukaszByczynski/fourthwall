@@ -28,10 +28,11 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
 
     implementation(project(":infrastructure:moviedb-client"))
+    implementation(project(":infrastructure:eventbus"))
+    implementation(project(":shared:domain"))
 
     testImplementation(kotlin("test"))
     testImplementation("org.testcontainers:postgresql:1.20.4")
-    testImplementation("com.h2database:h2:2.2.220")
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
     testImplementation("io.ktor:ktor-client-core:$ktorVersion")
     testImplementation("io.ktor:ktor-client-cio:$ktorVersion")

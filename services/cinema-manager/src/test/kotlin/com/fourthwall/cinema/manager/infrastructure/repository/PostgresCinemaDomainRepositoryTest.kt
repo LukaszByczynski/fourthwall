@@ -37,7 +37,7 @@ class PostgresCinemaDomainRepositoryTest {
             password = postgresContainer.password
         )
 
-        repository = PostgresCinemaRepository()
+        repository = PostgresCinemaRepository(database)
     }
 
     @AfterTest

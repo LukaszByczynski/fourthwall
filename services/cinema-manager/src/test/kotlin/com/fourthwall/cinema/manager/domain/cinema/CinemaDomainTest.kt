@@ -1,6 +1,7 @@
 package com.fourthwall.cinema.manager.domain.cinema
 
 import com.fourthwall.cinema.manager.domain.cinema.repository.InMemoryCinemaRepository
+import com.fourthwall.infrastructure.eventbus.inmem.InMemEventBus
 import kotlinx.datetime.LocalDate
 import org.jetbrains.exposed.sql.Database
 import kotlin.test.Test
@@ -10,15 +11,7 @@ import kotlin.test.assertTrue
 class CinemaDomainTest {
 
     private val cinemaRepository = InMemoryCinemaRepository()
-    private val cinemaDomain = CinemaDomain(cinemaRepository)
-
-    init {
-        // mock transaction block
-        Database.connect(
-            "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;",
-            driver = "org.h2.Driver"
-        )
-    }
+    private val cinemaDomain = CinemaDomain(cinemaRepository, InMemEventBus())
 
     @Test
     fun `addMovie should return MovieId when valid ImdbId is provided`() {

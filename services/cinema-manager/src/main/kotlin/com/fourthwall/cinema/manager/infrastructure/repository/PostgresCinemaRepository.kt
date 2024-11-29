@@ -12,10 +12,11 @@ import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 
-class PostgresCinemaRepository : CinemaRepository {
+class PostgresCinemaRepository(val database: Database) : CinemaRepository {
 
     companion object {
         private val json = Json { ignoreUnknownKeys = true }
@@ -27,7 +28,7 @@ class PostgresCinemaRepository : CinemaRepository {
     }
 
     init {
-        transaction {
+        transaction(database) {
             SchemaUtils.create(PostgresCinemaRepository.MovieTable)
         }
     }
@@ -43,7 +44,7 @@ class PostgresCinemaRepository : CinemaRepository {
     }
 
     override fun createMovie(name: String, imdbId: String): MovieId {
-        return transaction {
+        return transaction(database) {
             val result = MovieDAO.new {
                 payload =
                     json.encodeToString(
@@ -57,7 +58,7 @@ class PostgresCinemaRepository : CinemaRepository {
     }
 
     override fun fetchMovie(id: MovieId): Either<String, Movie> {
-        return transaction {
+        return transaction(database) {
             MovieDAO
                 .findById(id.id)
                 .toOption()
@@ -67,7 +68,7 @@ class PostgresCinemaRepository : CinemaRepository {
     }
 
     override fun fetchMovies(offset: Int, limit: Int): List<Movie> {
-        return transaction {
+        return transaction(database) {
             MovieDAO
                 .all()
                 .offset(offset.toLong())
@@ -78,7 +79,7 @@ class PostgresCinemaRepository : CinemaRepository {
     }
 
     override fun updateMovie(movie: Movie): Either<String, Boolean> {
-        return transaction {
+        return transaction(database) {
             MovieDAO
                 .findById(movie.id.id)
                 .toOption()
@@ -91,6 +92,6 @@ class PostgresCinemaRepository : CinemaRepository {
     }
 
     override fun deleteMovie(id: MovieId) {
-        transaction { MovieDAO.findById(id.id)?.delete() }
+        transaction(database) { MovieDAO.findById(id.id)?.delete() }
     }
 }
