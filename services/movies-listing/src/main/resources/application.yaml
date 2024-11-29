@@ -1,0 +1,16 @@
+ktor:
+  application:
+    modules:
+      - com.fourthwall.movieslisting.MoviesListingKt.module
+  deployment:
+    port: 8081
+
+databases:
+  movieslistingdb:
+    url: "jdbc:postgresql://localhost:5432/movieslistingdb"
+    user: movieslisting
+    password: $MOVIESLISTING_USER_PASSWORD
+  eventbusdb:
+    url: "jdbc:postgresql://localhost:5432/eventbusdb"
+    user: eventbus
+    password: $EVENTBUS_USER_PASSWORD
