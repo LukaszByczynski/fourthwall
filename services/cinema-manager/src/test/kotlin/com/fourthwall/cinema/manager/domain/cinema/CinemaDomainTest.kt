@@ -3,7 +3,6 @@ package com.fourthwall.cinema.manager.domain.cinema
 import com.fourthwall.cinema.manager.domain.cinema.repository.InMemoryCinemaRepository
 import com.fourthwall.infrastructure.eventbus.inmem.InMemEventBus
 import kotlinx.datetime.LocalDate
-import org.jetbrains.exposed.sql.Database
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -41,7 +40,7 @@ class CinemaDomainTest {
     @Test
     fun `addMovieShowTime should add show time to movie when it does exist`() {
         val movieId = MovieId(1)
-        val showTime = ShowTime(LocalDate.parse("2024-01-01"))
+        val showTime = ShowTime(LocalDate.parse("2024-01-01"), Time(12, 0))
         cinemaDomain.addMovie(
             "Inception",
             ImdbId("tt1375666")
@@ -58,7 +57,7 @@ class CinemaDomainTest {
     fun `addMovieShowTime should not add show time if it already exists`() {
         val movieId = MovieId(1)
         val showTime =
-            ShowTime(LocalDate.parse("2024-01-01"), listOf(Time(19, 0)))
+            ShowTime(LocalDate.parse("2024-01-01"), Time(19, 0))
         cinemaDomain.addMovie(
             "Inception",
             ImdbId("tt1375666")

@@ -98,17 +98,18 @@ fun Route.cinemaRoutes(
                     "Invalid Movie ID"
                 )
             val addShowTime = call.receive<AddShowTimeRequest>()
-            val date = runCatching { LocalDate.parse(addShowTime.date) }.getOrNull()
-                ?: return@post call.respond(
-                    HttpStatusCode.BadRequest,
-                    "Invalid Date"
-                )
+            val date =
+                runCatching { LocalDate.parse(addShowTime.date) }.getOrNull()
+                    ?: return@post call.respond(
+                        HttpStatusCode.BadRequest,
+                        "Invalid Date"
+                    )
 
             val result = cinemaDomain.addMovieShowTime(
                 MovieId(id),
                 ShowTime(
                     date,
-                    listOf(Time(addShowTime.hour, addShowTime.minute))
+                    Time(addShowTime.hour, addShowTime.minute)
                 )
             )
 

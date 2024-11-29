@@ -6,6 +6,7 @@ import arrow.core.right
 import com.fourthwall.cinema.manager.domain.cinema.repository.CinemaRepository
 import com.fourthwall.infrastructure.eventbus.EventBus
 import com.fourthwall.shared.domain.events.MovieAddedCmd
+import com.fourthwall.shared.domain.events.ShowTimeAdded
 import kotlinx.serialization.serializer
 
 const val MAX_LIMIT = 10
@@ -37,7 +38,18 @@ class CinemaDomain(
                     it.copy(
                         showTimes = it.showTimes + showTime
                     )
-                )
+                ).map {
+                    eventBus.publish(
+                        "add-movie",
+                        ShowTimeAdded(
+                            id.id,
+                            showTime.date,
+                            showTime.time.hour,
+                            showTime.time.minute
+                        ),
+                        serializer()
+                    )
+                }
             } else it.right()
         }.map {}
     }

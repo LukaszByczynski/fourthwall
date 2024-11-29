@@ -42,12 +42,9 @@ data class Time(val hour: Int, val minute: Int) {
 }
 
 @Serializable
-data class ShowTime(val date: LocalDate, val times: List<Time> = listOf()) {
+data class ShowTime(val date: LocalDate, val time: Time) {
     fun validate(): Either<String, Unit> {
-        return times
-            .map { it.validate() }
-            .flattenOrAccumulate { acc, s -> acc + "\n" + s }
-            .map { }
+        return time.validate()
     }
 }
 

@@ -162,7 +162,7 @@ class CinemaRoutesE2ETest {
             assertEquals(ImdbId("tt1375666"), fetchResponse.imdbId)
             assertContains(
                 fetchResponse.showTimes,
-                ShowTime(LocalDate.parse("2024-12-01"), listOf(Time(14, 30)))
+                ShowTime(LocalDate.parse("2024-12-01"), Time(14, 30))
             )
         }
     }
