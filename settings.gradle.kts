@@ -5,5 +5,6 @@ include(
     "infrastructure:moviedb-client",
     "infrastructure:eventbus",
     "services:cinema-manager",
-    "services:movies-listing"
+    "services:movies-listing",
+    "shared:domain"
 )
