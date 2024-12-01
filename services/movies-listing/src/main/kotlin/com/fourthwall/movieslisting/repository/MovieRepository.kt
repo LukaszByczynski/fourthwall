@@ -7,8 +7,16 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
+
+data class MovieDto(
+    val id: Int,
+    val externalId: Int,
+    val title: String,
+    val imdbId: String
+)
 
 object MoviesTable : IntIdTable("movies") {
     val imdbId = varchar("imdb_id", 255)
@@ -39,4 +47,26 @@ class MovieRepository(val database: Database) {
         }.right()
     }
 
+    fun fetchMovies(): Either<Nothing, List<MovieDto>> {
+        return transaction(database) {
+            MoviesTable.join(
+                MovieDetailsTable,
+                JoinType.INNER,
+                MoviesTable.id,
+                MovieDetailsTable.movie_id
+            ).select(
+                MoviesTable.id,
+                MoviesTable.externalId,
+                MovieDetailsTable.title,
+                MoviesTable.imdbId
+            ).map {
+                MovieDto(
+                    it[MoviesTable.id].value,
+                    it[MoviesTable.externalId],
+                    it[MovieDetailsTable.title],
+                    it[MoviesTable.imdbId]
+                )
+            }
+        }.right()
+    }
 }

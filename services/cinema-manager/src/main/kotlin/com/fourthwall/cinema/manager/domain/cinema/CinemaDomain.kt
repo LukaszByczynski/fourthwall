@@ -40,7 +40,7 @@ class CinemaDomain(
                     )
                 ).map {
                     eventBus.publish(
-                        "add-movie",
+                        "add-movie-show-time",
                         ShowTimeAdded(
                             id.id,
                             showTime.date,

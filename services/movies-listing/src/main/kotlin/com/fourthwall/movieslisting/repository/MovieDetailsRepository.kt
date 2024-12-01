@@ -1,6 +1,7 @@
 package com.fourthwall.movieslisting.repository
 
 import arrow.core.Either
+import arrow.core.firstOrNone
 import arrow.core.right
 import arrow.core.toOption
 import com.fourthwall.infrastructure.eventbus.postgres.repository.ClientOffsetRepository.ClientOffset.references
@@ -48,10 +49,11 @@ class MovieDetailsDAO(id: EntityID<Int>) : IntEntity(id) {
 
 class MovieDetailsRepository(val database: Database) {
 
-    fun addMovieDetails(id: Int): Either<String, Unit> {
+    fun addMovieDetails(id: Int, title: String): Either<String, Unit> {
         return transaction(database) {
             MovieDetailsDAO.new {
-                movie_id = id
+                this.movie_id = id
+                this.title = title
             }
         }.right().map { }
     }
@@ -66,7 +68,7 @@ class MovieDetailsRepository(val database: Database) {
         return transaction(database) {
             MovieDetailsDAO
                 .findSingleByAndUpdate(
-                    MovieDetailsTable.movie_id eq details.movie_id,
+                    MovieDetailsTable.movie_id eq details.id,
                     {
                         it.actors = details.actors
                         it.title = details.title
@@ -81,6 +83,30 @@ class MovieDetailsRepository(val database: Database) {
                         it.genre = details.genre
                     }
                 ).toOption().toEither { "Moview not found" }.map { }
+        }
+    }
+
+    fun fetchMovieDetails(id: Int): Either<String, MovieDetails> {
+        return transaction(database) {
+            MovieDetailsDAO
+                .find({ MovieDetailsTable.movie_id eq id })
+                .firstOrNone()
+                .map {
+                    MovieDetails(
+                        id = it.movie_id,
+                        actors = it.actors,
+                        title = it.title,
+                        year = it.year,
+                        rated = it.rated,
+                        released = it.released,
+                        genre = it.genre,
+                        director = it.director,
+                        writer = it.writer,
+                        language = it.language,
+                        country = it.country,
+                        imdbRating = it.imdbRating
+                    )
+                }.toEither { "Moview not found" }
         }
     }
 }

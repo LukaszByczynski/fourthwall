@@ -168,6 +168,7 @@ fun Route.cinemaRoutes(
             response {
                 HttpStatusCode.OK to {
                     description = "Movie details"
+                    body<Movie>()
                 }
                 HttpStatusCode.NotFound to {
                     description = "Error description"
